@@ -1,0 +1,23 @@
+---
+import DefaultLayout from "../layouts/Default.astro";
+import { HeroSection } from '../sections/Hero.tsx';
+import { FeaturesCardsSection } from '../sections/FeaturesCards.tsx';
+import { FeaturesGrid } from '../sections/FeaturesGrid.tsx';
+import { LatestPosts } from '../sections/LatestPosts.tsx';
+import { getCollection } from "astro:content";
+
+
+const posts = await getCollection('blog');
+const latestPosts = posts.sort((a, b) => {
+  if (a.data.pubDate.valueOf() === b.data.pubDate.valueOf()) return 0;
+  return a.data.pubDate.valueOf() > b.data.pubDate.valueOf() ? -1 : 1;
+}).slice(0, 4);
+
+---
+
+<DefaultLayout>
+  <HeroSection client:load />
+  <FeaturesCardsSection client:load/>
+  <FeaturesGrid client:load/>
+  <LatestPosts latestPosts={latestPosts} client:load/>
+</DefaultLayout>
